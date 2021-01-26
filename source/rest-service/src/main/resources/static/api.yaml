@@ -10,7 +10,7 @@ externalDocs:
   description: Find out more about AERIUS
   url: https://aerius.nl/
 servers:
-- url: http://localhost:8080/
+- url: /api/v1/
 tags:
 - name: dataset
   description: Information about the different datasets
