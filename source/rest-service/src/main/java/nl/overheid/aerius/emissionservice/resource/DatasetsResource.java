@@ -37,7 +37,7 @@ import nl.overheid.aerius.emissionservice.model.FarmAdditionalLodgingSystemCateg
 import nl.overheid.aerius.emissionservice.model.FarmFodderMeasureCategory;
 import nl.overheid.aerius.emissionservice.model.FarmLodgingCategory;
 import nl.overheid.aerius.emissionservice.model.FarmReductiveLodgingSystemCategory;
-import nl.overheid.aerius.emissionservice.model.RoadEmissionFactor;
+import nl.overheid.aerius.emissionservice.model.RoadEmissionFactors;
 import nl.overheid.aerius.emissionservice.model.RoadSpeedProfileCategory;
 import nl.overheid.aerius.emissionservice.model.Sector;
 import nl.overheid.aerius.emissionservice.repository.DatasetStore;
@@ -181,9 +181,10 @@ public class DatasetsResource implements DatasetsApiDelegate {
   }
 
   @Override
-  public ResponseEntity<List<RoadEmissionFactor>> getRoadEmissionFactors(final String dataset, final String speedprofile, final String vehicletype,
+  public ResponseEntity<RoadEmissionFactors> getRoadEmissionFactors(final String dataset, final String speedprofile, final String vehicletype,
       final Integer year, final Optional<String> acceptLanguage) {
-    return handle(dataset, acceptLanguage, locale -> roadRepository.getEmissionFactors(locale, speedprofile, vehicletype, year));
+    return handle(dataset, acceptLanguage, locale -> roadRepository.getEmissionFactors(locale, speedprofile, vehicletype, year).orElseThrow(
+        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find road emission factors for supplied parameters")));
   }
 
   private <T> ResponseEntity<T> handle(final String dataset, final Optional<String> acceptLanguage, final Supplier<T> function) {
